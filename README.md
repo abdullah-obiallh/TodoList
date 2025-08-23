@@ -1,6 +1,7 @@
 Hello,
 this is my second project is todo list, i use a lot of useState useContext useEffect and i use somthing new is MUI freamwork (CSS FreamWork) is very good and make everything easer and faster,
 about the todolist project:
+it's Responsively work with all screen size 
 You can Add todo, edit , and delete 
 You can see the Completed,UnCompleted,Today,Upcoming todos
 You can add title,content and date about the todo
