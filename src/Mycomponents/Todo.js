@@ -5,7 +5,7 @@ import AddIcon from "@mui/icons-material/Add";
 //another import
 import { WhichToRenderTodo } from "../Context/TodoContext";
 import { useState, useContext, useEffect } from "react";
-import { TodoContext, DateContext } from "../Context/TodoContext";
+import { TodoContext } from "../Context/TodoContext";
 import Card from "./Card";
 import { v4 as uuidv4 } from "uuid";
 import ScrollTodo from "./ScrollTodo";
@@ -19,7 +19,7 @@ import dayjs from "dayjs";
 export default function Todo() {
   const { RenderTodo } = useContext(WhichToRenderTodo);
   const { TodoList, setTodolist } = useContext(TodoContext);
-  const { inputDate, setInputDate } = useContext(DateContext);
+  const [inputDate, setInputDate] = useState(dayjs());
   const [inputfield, setInputfield] = useState({ title: "", content: "" });
 
   let today = dayjs().format("YYYY-MM-DD");
@@ -67,6 +67,7 @@ export default function Todo() {
       setTodolist(newtodoadd);
       localStorage.setItem("todos", JSON.stringify(newtodoadd));
       setInputfield({ ...inputfield, title: "", content: "" });
+      setInputDate(null);
     }
   }
   useEffect(() => {

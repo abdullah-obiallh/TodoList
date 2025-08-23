@@ -11,7 +11,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
 //date
-import { TodoContext, DateContext } from "../Context/TodoContext";
+import { TodoContext } from "../Context/TodoContext";
 //dialog
 import Button from "@mui/material/Button"; //button
 import Dialog from "@mui/material/Dialog";
@@ -24,7 +24,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 //dialog
 
 export default function Card({ todo }) {
-  const { inputDate, setInputDate } = useContext(DateContext);
+  const [inputDate, setInputDate] = useState(dayjs());
   const [ClickToShowDelete, SetClickToShowDelete] = useState(false);
   const [ClickToShowEdit, SetClickToShowEdit] = useState(false);
   const [Editinput, SetEditinput] = useState({
