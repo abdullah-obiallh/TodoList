@@ -23,6 +23,7 @@ export default function Todo() {
   const [inputfield, setInputfield] = useState({ title: "", content: "" });
 
   let today = dayjs().format("YYYY-MM-DD");
+
   const CompletedToDo = TodoList.filter((t) => {
     return t.isComplete;
   });
@@ -45,9 +46,11 @@ export default function Todo() {
   } else if (RenderTodo === "UpComming") {
     DisplayToDo = UpCommingToDo;
   }
+
   let todo = DisplayToDo.map((t) => {
     return <Card key={t.id} todo={t} />;
   });
+
   function AddToList() {
     if (
       inputfield.title.trim() !== "" &&
@@ -71,7 +74,8 @@ export default function Todo() {
     }
   }
   useEffect(() => {
-    setTodolist(JSON.parse(localStorage.getItem("todos")));
+    const savefromnull = JSON.parse(localStorage.getItem("todos")) ?? [];
+    setTodolist(savefromnull);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (

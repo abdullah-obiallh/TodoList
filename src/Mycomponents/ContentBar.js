@@ -4,11 +4,11 @@ import Todo from "./Todo";
 import Grid from "@mui/material/Grid";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-
-import { useState, useEffect } from "react";
+import { WhichToRenderTodo } from "../Context/TodoContext";
+import { useState, useEffect, useContext } from "react";
 
 export default function ContentBar() {
-  const { RenderTodo, setRenderTodo } = useState();
+  const { RenderTodo, setRenderTodo } = useContext(WhichToRenderTodo);
   const [width, setWidth] = useState(window.innerWidth);
 
   function handleChangeToggleButton(e) {
