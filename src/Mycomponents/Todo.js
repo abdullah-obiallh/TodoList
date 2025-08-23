@@ -14,7 +14,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-//scroll import
+//animatoon
+import Grow from "@mui/material/Grow";
 
 export default function Todo() {
   const { RenderTodo } = useContext(WhichToRenderTodo);
@@ -37,6 +38,7 @@ export default function Todo() {
     return t.date > today;
   });
   let DisplayToDo = TodoList;
+
   if (RenderTodo === "Completed") {
     DisplayToDo = CompletedToDo;
   } else if (RenderTodo === "NotCompleted") {
@@ -48,7 +50,13 @@ export default function Todo() {
   }
 
   let todo = DisplayToDo.map((t) => {
-    return <Card key={t.id} todo={t} />;
+    return (
+      <Grow in={true} key={t.id} timeout={500}>
+        <div>
+          <Card todo={t} />
+        </div>
+      </Grow>
+    );
   });
 
   function AddToList() {
@@ -80,7 +88,11 @@ export default function Todo() {
   }, []);
   return (
     <div className="Todo">
-      <ScrollTodo items={todo} />
+      <Grow in={true} key={[RenderTodo]} timeout={700}>
+        <div>
+          <ScrollTodo items={todo} />
+        </div>
+      </Grow>
       <Grid container style={{ margin: "10px 15px" }} spacing={1}>
         <Grid
           size={{ xs: 4, md: 12 }}

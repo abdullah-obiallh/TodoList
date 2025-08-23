@@ -20,10 +20,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import TextField from "@mui/material/TextField"; //text input
 import DialogTitle from "@mui/material/DialogTitle";
-
 //dialog
+//grow
+import Grow from "@mui/material/Grow";
 
 export default function Card({ todo }) {
+  const [animationout, setanimationout] = useState(true);
   const [inputDate, setInputDate] = useState(dayjs());
   const [ClickToShowDelete, SetClickToShowDelete] = useState(false);
   const [ClickToShowEdit, SetClickToShowEdit] = useState(false);
@@ -51,6 +53,9 @@ export default function Card({ todo }) {
     SetClickToShowDelete(false);
   }
   function handelDELEATEtodo() {
+    setanimationout(false);
+  }
+  function AfterAnimationEnd() {
     const newtodolist = TodoList.filter((item) => {
       return item.id !== todo.id;
     });
@@ -85,147 +90,149 @@ export default function Card({ todo }) {
   }
   // Edit function
   return (
-    <div className="Card">
-      {/*           dialog              */}
-      <Dialog
-        open={ClickToShowDelete}
-        onClose={handelclosedDeleteialog}
-        disableRestoreFocus
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle color="red" id="alert-dialog-title">
-          {"are you sure you want to delete it?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            If you delete it, you won't be able to get it back.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handelclosedDeleteialog} autoFocus>
-            NO
-          </Button>
-          <Button onClick={handelDELEATEtodo}>YES</Button>
-        </DialogActions>
-      </Dialog>
-      {/*           dialog            */}
-
-      {/* Edit Dialog */}
-      <Dialog
-        open={ClickToShowEdit}
-        onClose={HandelclosedEditDialog}
-        disableRestoreFocus
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Edit"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            What do you want to change?
-          </DialogContentText>
-          <TextField
-            value={Editinput.title}
-            onChange={(e) => {
-              SetEditinput({ ...Editinput, title: e.target.value });
-            }}
-            autoFocus
-            required
-            margin="dense"
-            id="name"
-            label="TitleName"
-            fullWidth
-            variant="standard"
-          />
-          <TextField
-            value={Editinput.content}
-            onChange={(e) => {
-              SetEditinput({ ...Editinput, content: e.target.value });
-            }}
-            required
-            margin="dense"
-            label="Content"
-            fullWidth
-            variant="standard"
-          />
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              value={inputDate}
-              onChange={(e) => {
-                setInputDate(e);
-              }}
-            />
-          </LocalizationProvider>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={HandelclosedEditDialog}>Never Mind</Button>
-          <Button onClick={ChangetodoTitleandContent}>Edit</Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Edit Dialog */}
-      <Grid container>
-        <Grid size={{ xs: 10, md: 10 }} display="flex" flexDirection="column">
-          <p
-            style={{
-              textAlign: "center",
-              fontWeight: "bold",
-              fontSize: "25px",
-              textDecoration: todo.isComplete ? "line-through" : "",
-            }}
-          >
-            {todo.title}
-          </p>
-          <p style={{ marginLeft: "10px" }}>{todo.content}</p>
-        </Grid>
-        {/* icon buttons */}
-        <Grid
-          size={{ xs: 2, md: 2 }}
-          display="flex"
-          justifyContent="space-around"
-          alignItems="center"
-          flexDirection="column"
+    <Grow in={animationout} timeout={500} onExited={AfterAnimationEnd}>
+      <div className="Card">
+        {/*           dialog              */}
+        <Dialog
+          open={ClickToShowDelete}
+          onClose={handelclosedDeleteialog}
+          disableRestoreFocus
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
         >
-          {/* Check icon */}
-          <IconButton
-            onClick={() => {
-              click();
-            }}
-            style={{
-              color: todo.isComplete ? "white" : "green",
-              background: todo.isComplete ? "green" : "white",
-              border: "solid green 1px",
-            }}
+          <DialogTitle color="red" id="alert-dialog-title">
+            {"are you sure you want to delete it?"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              If you delete it, you won't be able to get it back.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handelclosedDeleteialog} autoFocus>
+              NO
+            </Button>
+            <Button onClick={handelDELEATEtodo}>YES</Button>
+          </DialogActions>
+        </Dialog>
+        {/*           dialog            */}
+
+        {/* Edit Dialog */}
+        <Dialog
+          open={ClickToShowEdit}
+          onClose={HandelclosedEditDialog}
+          disableRestoreFocus
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Edit"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              What do you want to change?
+            </DialogContentText>
+            <TextField
+              value={Editinput.title}
+              onChange={(e) => {
+                SetEditinput({ ...Editinput, title: e.target.value });
+              }}
+              autoFocus
+              required
+              margin="dense"
+              id="name"
+              label="TitleName"
+              fullWidth
+              variant="standard"
+            />
+            <TextField
+              value={Editinput.content}
+              onChange={(e) => {
+                SetEditinput({ ...Editinput, content: e.target.value });
+              }}
+              required
+              margin="dense"
+              label="Content"
+              fullWidth
+              variant="standard"
+            />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                value={inputDate}
+                onChange={(e) => {
+                  setInputDate(e);
+                }}
+              />
+            </LocalizationProvider>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={HandelclosedEditDialog}>Never Mind</Button>
+            <Button onClick={ChangetodoTitleandContent}>Edit</Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Edit Dialog */}
+        <Grid container>
+          <Grid size={{ xs: 10, md: 10 }} display="flex" flexDirection="column">
+            <p
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: "25px",
+                textDecoration: todo.isComplete ? "line-through" : "",
+              }}
+            >
+              {todo.title}
+            </p>
+            <p style={{ marginLeft: "10px" }}>{todo.content}</p>
+          </Grid>
+          {/* icon buttons */}
+          <Grid
+            size={{ xs: 2, md: 2 }}
+            display="flex"
+            justifyContent="space-around"
+            alignItems="center"
+            flexDirection="column"
           >
-            <CheckIcon />
-          </IconButton>
-          {/* Check icon */}
-          {/* edit icon */}
-          <IconButton
-            onClick={HandelOpenEditDialog}
-            style={{
-              color: "#0d47a1",
-              border: "solid #0d47a1 1px",
-            }}
-          >
-            <EditIcon />
-          </IconButton>
-          {/* edit icon */}
-          {/* Delete icon */}
-          <IconButton
-            onClick={handelopendialog}
-            style={{
-              color: "#c62828",
-              border: "solid #c62828 1px",
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-          {/* Delete icon */}
+            {/* Check icon */}
+            <IconButton
+              onClick={() => {
+                click();
+              }}
+              style={{
+                color: todo.isComplete ? "white" : "green",
+                background: todo.isComplete ? "green" : "white",
+                border: "solid green 1px",
+              }}
+            >
+              <CheckIcon />
+            </IconButton>
+            {/* Check icon */}
+            {/* edit icon */}
+            <IconButton
+              onClick={HandelOpenEditDialog}
+              style={{
+                color: "#0d47a1",
+                border: "solid #0d47a1 1px",
+              }}
+            >
+              <EditIcon />
+            </IconButton>
+            {/* edit icon */}
+            {/* Delete icon */}
+            <IconButton
+              onClick={handelopendialog}
+              style={{
+                color: "#c62828",
+                border: "solid #c62828 1px",
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
+            {/* Delete icon */}
+          </Grid>
+          {/* icon button */}
+          <Grid size={6}>{todo.date}</Grid>
         </Grid>
-        {/* icon button */}
-        <Grid size={6}>{todo.date}</Grid>
-      </Grid>
-    </div>
+      </div>
+    </Grow>
   );
 }
