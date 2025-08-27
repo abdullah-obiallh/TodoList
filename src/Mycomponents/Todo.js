@@ -5,7 +5,7 @@ import AddIcon from "@mui/icons-material/Add";
 //another import
 import { WhichToRenderTodo } from "../Context/TodoContext";
 import { useMemo, useState, useContext, useEffect } from "react";
-import { TodoContext } from "../Context/TodoContext";
+import { TodoContext, ShowNotificationBar } from "../Context/TodoContext";
 import Card from "./Card";
 import { v4 as uuidv4 } from "uuid";
 import ScrollTodo from "./ScrollTodo";
@@ -27,6 +27,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 export default function Todo() {
   const [dialogtodo, setdialogtodo] = useState(null);
   const { RenderTodo } = useContext(WhichToRenderTodo);
+  const ShowHideMassageNotificationBar = useContext(ShowNotificationBar);
+
   const { TodoList, setTodolist } = useContext(TodoContext);
   const [inputDate, setInputDate] = useState(dayjs());
   const [AddinputDate, setAddInputDate] = useState(null);
@@ -85,6 +87,8 @@ export default function Todo() {
       ...prev,
       [dialogtodo.id]: false,
     }));
+    ShowHideMassageNotificationBar("Done");
+    SetClickToShowDelete(false);
   }
   //delete dialog option
   //edit dialog option
@@ -110,7 +114,7 @@ export default function Todo() {
     });
     setTodolist(changedtodolist);
     localStorage.setItem("todos", JSON.stringify(changedtodolist));
-
+    ShowHideMassageNotificationBar("Editing Done", "blue");
     HandelclosedEditDialog();
   }
   //edit dialog
@@ -127,7 +131,6 @@ export default function Todo() {
           setTodolist(newtodolist);
           localStorage.setItem("todos", JSON.stringify(newtodolist));
           setDeleteAnimation({});
-          SetClickToShowDelete(false);
           //delete dialog todo function
         }}
       >
@@ -143,7 +146,11 @@ export default function Todo() {
   });
 
   function AddToList() {
-    if (inputfield.title.trim() !== "" && inputDate && inputDate.isValid()) {
+    if (
+      inputfield.title.trim() !== "" &&
+      AddinputDate &&
+      AddinputDate.isValid()
+    ) {
       let newList = [...TodoList];
       newList = {
         id: uuidv4(),
@@ -152,11 +159,13 @@ export default function Todo() {
         isComplete: false,
         date: AddinputDate.format("YYYY-MM-DD"),
       };
+
       const newtodoadd = [...TodoList, newList];
       setTodolist(newtodoadd);
       localStorage.setItem("todos", JSON.stringify(newtodoadd));
       setInputfield({ ...inputfield, title: "", content: "" });
-      setInputDate(null);
+      ShowHideMassageNotificationBar("Addiding Done");
+      setInputDate({});
       setAddInputDate(null);
     }
   }

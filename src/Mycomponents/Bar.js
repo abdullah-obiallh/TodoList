@@ -10,7 +10,6 @@ export default function Bar() {
           <ContentBar />
         </div>
       </Grow>
-      {/* <SideBar /> */}
     </div>
   );
 }
