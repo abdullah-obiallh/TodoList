@@ -3,15 +3,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
-import { useContext } from "react";
-import { TodoContext } from "../Context/TodoContext";
+
+import { useTodo } from "../Context/TodoContext";
 
 export default function Card({
   todo,
   handelopendeletedialog,
   handelopeneditdialog,
 }) {
-  const { TodoList, setTodolist } = useContext(TodoContext);
+  const { TodoList, setTodolist } = useTodo();
   function click() {
     const NewToDo = TodoList.map((item) => {
       if (item.id === todo.id) {

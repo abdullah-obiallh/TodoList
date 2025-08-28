@@ -3,9 +3,8 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 //another import
-import { WhichToRenderTodo } from "../Context/TodoContext";
-import { useMemo, useState, useContext, useEffect } from "react";
-import { TodoContext, ShowNotificationBar } from "../Context/TodoContext";
+import { useToast, useTodo } from "../Context/TodoContext";
+import { useMemo, useState, useEffect } from "react";
 import Card from "./Card";
 import { v4 as uuidv4 } from "uuid";
 import ScrollTodo from "./ScrollTodo";
@@ -24,12 +23,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function Todo() {
+export default function Todo({ RenderTodo }) {
   const [dialogtodo, setdialogtodo] = useState(null);
-  const { RenderTodo } = useContext(WhichToRenderTodo);
-  const ShowHideMassageNotificationBar = useContext(ShowNotificationBar);
 
-  const { TodoList, setTodolist } = useContext(TodoContext);
+  const { HideShowToast } = useToast();
+
+  const { TodoList, setTodolist } = useTodo();
   const [inputDate, setInputDate] = useState(dayjs());
   const [AddinputDate, setAddInputDate] = useState(null);
   const [ClickToShowDelete, SetClickToShowDelete] = useState(false);
@@ -87,7 +86,7 @@ export default function Todo() {
       ...prev,
       [dialogtodo.id]: false,
     }));
-    ShowHideMassageNotificationBar("Done");
+    HideShowToast("Done");
     SetClickToShowDelete(false);
   }
   //delete dialog option
@@ -114,7 +113,7 @@ export default function Todo() {
     });
     setTodolist(changedtodolist);
     localStorage.setItem("todos", JSON.stringify(changedtodolist));
-    ShowHideMassageNotificationBar("Editing Done", "blue");
+    HideShowToast("Editing Done", "blue");
     HandelclosedEditDialog();
   }
   //edit dialog
@@ -164,7 +163,7 @@ export default function Todo() {
       setTodolist(newtodoadd);
       localStorage.setItem("todos", JSON.stringify(newtodoadd));
       setInputfield({ ...inputfield, title: "", content: "" });
-      ShowHideMassageNotificationBar("Addiding Done");
+      HideShowToast("Addiding Done");
       setInputDate({});
       setAddInputDate(null);
     }
