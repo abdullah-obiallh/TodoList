@@ -3,24 +3,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
-
 import { useTodo } from "../Context/TodoContext";
-
 export default function Card({
   todo,
   handelopendeletedialog,
   handelopeneditdialog,
 }) {
-  const { TodoList, setTodolist } = useTodo();
+  const { dispatch } = useTodo();
   function click() {
-    const NewToDo = TodoList.map((item) => {
-      if (item.id === todo.id) {
-        item.isComplete = !item.isComplete;
-      }
-      return item;
-    });
-    setTodolist(NewToDo);
-    localStorage.setItem("todos", JSON.stringify(NewToDo));
+    dispatch({ type: "check", payload: { id: todo.id } });
   }
   // Delete function
   function handelopendialog() {
@@ -35,22 +26,36 @@ export default function Card({
   return (
     <div className="Card">
       <Grid container>
-        <Grid size={{ xs: 10, md: 10 }} display="flex" flexDirection="column">
+        <Grid size={{ xs: 9, md: 9 }} display="flex" flexDirection="column">
           <p
             style={{
               textAlign: "center",
               fontWeight: "bold",
               fontSize: "25px",
               textDecoration: todo.isComplete ? "line-through" : "",
+              wordBreak: "break-word",
+              whiteSpace: "pre-wrap",
+              maxWidth: "200px",
+              margin: "auto",
             }}
           >
             {todo.title}
           </p>
-          <p style={{ marginLeft: "10px" }}>{todo.content}</p>
+          <p
+            style={{
+              marginLeft: "10px",
+              wordBreak: "break-word",
+              whiteSpace: "pre-wrap",
+              maxWidth: "200px",
+              margin: "auto",
+            }}
+          >
+            {todo.content}
+          </p>
         </Grid>
         {/* icon buttons */}
         <Grid
-          size={{ xs: 2, md: 2 }}
+          size={{ xs: 3, md: 3 }}
           display="flex"
           justifyContent="space-around"
           alignItems="center"
@@ -94,7 +99,7 @@ export default function Card({
           {/* Delete icon */}
         </Grid>
         {/* icon button */}
-        <Grid size={6}>{todo.date}</Grid>
+        <Grid size={12}>{todo.date}</Grid>
       </Grid>
     </div>
   );

@@ -1,7 +1,7 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useReducer } from "react";
 import MyNotificationBar from "../Mycomponents/MyNotificationBar";
 import { v4 as uuidv4 } from "uuid";
-
+import TodoReducer from "../Reducers/TodoReduce";
 export const DateContext = createContext();
 
 //< Toast Provider
@@ -43,9 +43,9 @@ export const TodoProvider = ({ children }) => {
       date: "",
     },
   ];
-  const [TodoList, setTodolist] = useState(inisialList);
+  const [TodoList, dispatch] = useReducer(TodoReducer, inisialList);
   return (
-    <TodoContext.Provider value={{ TodoList, setTodolist }}>
+    <TodoContext.Provider value={{ TodoList, dispatch }}>
       {children}
     </TodoContext.Provider>
   );

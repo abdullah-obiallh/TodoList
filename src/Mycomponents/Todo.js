@@ -6,7 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useToast, useTodo } from "../Context/TodoContext";
 import { useMemo, useState, useEffect } from "react";
 import Card from "./Card";
-import { v4 as uuidv4 } from "uuid";
+
 import ScrollTodo from "./ScrollTodo";
 //date
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -28,14 +28,13 @@ export default function Todo({ RenderTodo }) {
 
   const { HideShowToast } = useToast();
 
-  const { TodoList, setTodolist } = useTodo();
-  const [inputDate, setInputDate] = useState(dayjs());
-  const [AddinputDate, setAddInputDate] = useState(null);
+  const [inputDate, setInputDate] = useState({ add: null, edit: null });
   const [ClickToShowDelete, SetClickToShowDelete] = useState(false);
   const [deleteAnimation, setDeleteAnimation] = useState({});
   const [ClickToShowEdit, SetClickToShowEdit] = useState(false);
   const [Editinput, SetEditinput] = useState({});
   const [inputfield, setInputfield] = useState({ title: "", content: "" });
+  const { TodoList, dispatch } = useTodo();
 
   let today = dayjs().format("YYYY-MM-DD");
 
@@ -82,57 +81,39 @@ export default function Todo({ RenderTodo }) {
     SetClickToShowDelete(false);
   }
   function handelDELEATEtodo() {
-    setDeleteAnimation((prev) => ({
-      ...prev,
+    setDeleteAnimation((t) => ({
+      ...t,
       [dialogtodo.id]: false,
     }));
     HideShowToast("Done");
     SetClickToShowDelete(false);
+    setTimeout(() => {
+      dispatch({ type: "delete", payload: { dialogtodo } });
+      setDeleteAnimation({});
+    }, 700);
   }
   //delete dialog option
   //edit dialog option
   function HandelOpenEditDialog(editTodo) {
     SetEditinput(editTodo);
-    setInputDate(dayjs(editTodo.date));
+    setInputDate({ ...inputDate, edit: dayjs(editTodo.date) });
     SetClickToShowEdit(true);
   }
   function HandelclosedEditDialog() {
     SetClickToShowEdit(false);
   }
   function ChangetodoTitleandContent() {
-    const changedtodolist = TodoList.map((item) => {
-      if (item.id === Editinput.id) {
-        return {
-          ...item,
-          title: Editinput.title,
-          content: Editinput.content,
-          date: inputDate.format("YYYY-MM-DD"),
-        };
-      }
-      return item;
+    dispatch({
+      type: "edit",
+      payload: { Editinput, inputDate: inputDate.edit.format("YYYY-MM-DD") },
     });
-    setTodolist(changedtodolist);
-    localStorage.setItem("todos", JSON.stringify(changedtodolist));
-    HideShowToast("Editing Done", "blue");
+    HideShowToast("Editing Done");
     HandelclosedEditDialog();
   }
   //edit dialog
   let todo = DisplayToDo.map((t) => {
     return (
-      <Grow
-        key={t.id}
-        in={deleteAnimation[t.id] !== false}
-        timeout={700}
-        onExited={() => {
-          const newtodolist = TodoList.filter(
-            (item) => item.id !== dialogtodo.id
-          );
-          setTodolist(newtodolist);
-          localStorage.setItem("todos", JSON.stringify(newtodolist));
-          setDeleteAnimation({});
-          //delete dialog todo function
-        }}
-      >
+      <Grow key={t.id} in={deleteAnimation[t.id] !== false} timeout={700}>
         <div>
           <Card
             todo={t}
@@ -147,30 +128,25 @@ export default function Todo({ RenderTodo }) {
   function AddToList() {
     if (
       inputfield.title.trim() !== "" &&
-      AddinputDate &&
-      AddinputDate.isValid()
+      inputDate.add &&
+      inputDate.add.isValid()
     ) {
-      let newList = [...TodoList];
-      newList = {
-        id: uuidv4(),
-        title: inputfield.title,
-        content: inputfield.content,
-        isComplete: false,
-        date: AddinputDate.format("YYYY-MM-DD"),
-      };
-
-      const newtodoadd = [...TodoList, newList];
-      setTodolist(newtodoadd);
-      localStorage.setItem("todos", JSON.stringify(newtodoadd));
-      setInputfield({ ...inputfield, title: "", content: "" });
+      dispatch({
+        type: "add",
+        payload: {
+          inputTitle: inputfield.title,
+          inputContent: inputfield.content,
+          inputDate: inputDate.add.format("YYYY-MM-DD"),
+        },
+      });
+      setInputDate({ ...inputDate, add: null });
       HideShowToast("Addiding Done");
-      setInputDate({});
-      setAddInputDate(null);
+      setInputfield({ ...inputfield, title: "", content: "" });
     }
   }
+
   useEffect(() => {
-    const savefromnull = JSON.parse(localStorage.getItem("todos")) ?? [];
-    setTodolist(savefromnull);
+    dispatch({ type: "get" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -239,9 +215,9 @@ export default function Todo({ RenderTodo }) {
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              value={inputDate}
+              value={inputDate.edit}
               onChange={(e) => {
-                setInputDate(e);
+                setInputDate({ ...inputDate, edit: e });
               }}
             />
           </LocalizationProvider>
@@ -305,9 +281,9 @@ export default function Todo({ RenderTodo }) {
         <Grid size={{ xs: 6, md: 6 }} display="flex">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              value={AddinputDate}
+              value={inputDate.add}
               onChange={(e) => {
-                setAddInputDate(e);
+                setInputDate({ ...inputDate, add: e });
               }}
             />
           </LocalizationProvider>
