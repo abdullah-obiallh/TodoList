@@ -1,5 +1,6 @@
 Hello,
-this is my second project, todo list project. it is simple website that allow you to add todo and change and delete, i use a lot of useState useContext useEffect useMemo useReducer and i use somthing new is MUI freamwork (CSS FreamWork) is very good and make everything easer and faster,
+this is my second react web app project,
+todo list project. it is simple website that allow you to add todo and change and delete, i use a lot of useState useContext useEffect useMemo useReducer and i use somthing new is MUI freamwork (CSS FreamWork) is very good and make everything easer and faster,
 about the todolist project:
 it's Responsively work with all screen size 
 You can Add todo, edit , and delete 
